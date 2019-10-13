@@ -37,7 +37,7 @@ public class HomeController
 		log.info("getIndex() was stopped ");
 		return new ModelAndView("index");
 	}
-	@RequestMapping(value="/customer",method=RequestMethod.POST)
+	@RequestMapping(value="/customers",method=RequestMethod.POST)
 	public ModelAndView validateZipCode(@RequestParam("zipCode") int zipCode , ModelMap model)
 	{
 		log.info("validateZipCode() started ");

@@ -37,6 +37,28 @@ public class ZipBean
 	public void setCountryName(String countryName) {
 		this.countryName = countryName;
 	}
+	/**
+	 * @param zipCode
+	 * @param cityName
+	 * @param stateName
+	 * @param countryName
+	 */
+	public ZipBean(int zipCode, String cityName, String stateName, String countryName) {
+		super();
+		this.zipCode = zipCode;
+		this.cityName = cityName;
+		this.stateName = stateName;
+		this.countryName = countryName;
+	}
+	/**
+	 * 
+	 */
+	public ZipBean() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 	
 
 }
