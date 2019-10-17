@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -48,8 +49,9 @@ public class DataDaoImplementation implements DataDao {
 	@Override
 	public int insertCustomerData(CustomerBean customerBean) {
 		Session session = sessionFactory.openSession();
-		//session.save(customerBean);
+		Transaction transaction = session.beginTransaction();
 		session.saveOrUpdate(customerBean);
+		transaction.commit();
 		return 0;
 	}
 
