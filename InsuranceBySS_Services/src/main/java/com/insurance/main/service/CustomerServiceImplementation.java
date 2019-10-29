@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.insurance.main.bean.CustomerBean;
 import com.insurance.main.dao.DataDao;
+import com.insurance.main.logics.CustomerRefId;
 
 /**
  * @author Narsingh Mahankali
@@ -23,7 +24,9 @@ public class CustomerServiceImplementation implements CustomerService {
 
 	@Override
 	public int insertCustomerData(CustomerBean customerBean) {
-		
+		if(customerBean != null && customerBean.getCustomerReferanceId() == null) {
+			customerBean.setCustomerReferanceId(CustomerRefId.getCustomerRefId());
+		}
 		return dao.insertCustomerData(customerBean);
 	}
 
