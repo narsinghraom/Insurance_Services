@@ -1,5 +1,6 @@
 package com.insurance.main.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -50,9 +51,9 @@ public class DataDaoImplementation implements DataDao {
 	public int insertCustomerData(CustomerBean customerBean) {
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		session.saveOrUpdate(customerBean);
+		Serializable serializable=  session.save(customerBean);
 		transaction.commit();
-		return 0;
+		return serializable != null ? 1 : 0;
 	}
 
 	@Override
@@ -89,6 +90,7 @@ public class DataDaoImplementation implements DataDao {
 	 * @return
 	 */
 	private String customerUpdateQueryBuilder(CustomerBean customerBean) {
+		//update customerBean set customerFirstname=:customerFirstname
 		StringBuilder queryBuilder = new StringBuilder("update CustomerBean set ");
 		if (customerBean.getCustomerFirstName() != null) {
 			queryBuilder.append(CommonConstants.CUSTOMER_FIRST_NAME + CommonConstants.EQUAL_COLON
