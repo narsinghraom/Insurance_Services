@@ -10,17 +10,18 @@ import com.insurance.main.dao.DataDao;
 
 @Service
 public class DataServiceImplementation implements DataService{
-	@Autowired  
-	 DataDao dataDao;  
+	/*
+	 * @Autowired DataDao dataDao;
+	 */
 	public List<ZipBean> getList() {
-		 return dataDao.getList();  
+		 return null;//dataDao.getList();  
 	}
 	public List<String> getZipList(String zip) {
 		
-		return dataDao.getZipList(zip);
+		return null;//dataDao.getZipList(zip);
 	}
 	public List<ZipBean> getZipData(String zip) {
-		return dataDao.getZipData(zip);
+		return null;//dataDao.getZipData(zip);
 	}
 
 }

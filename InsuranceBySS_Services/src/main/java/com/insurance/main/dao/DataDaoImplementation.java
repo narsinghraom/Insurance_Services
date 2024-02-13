@@ -14,7 +14,7 @@ import com.insurance.main.bean.CustomerBean;
 import com.insurance.main.bean.ZipBean;
 import com.insurance.main.constants.CommonConstants;
 
-@Repository
+//@Repository
 public class DataDaoImplementation implements DataDao {
 	@Autowired
 	SessionFactory sessionFactory;

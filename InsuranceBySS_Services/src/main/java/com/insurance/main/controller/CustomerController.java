@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.insurance.main.bean.CustomerBean;
 import com.insurance.main.response.CreateResponse;
+import com.insurance.main.response.CustomerResponse;
 import com.insurance.main.service.CustomerService;
 
 @RestController
@@ -50,24 +52,27 @@ public class CustomerController {
     }
  
     @GetMapping("get/{refId}")
-    public ResponseEntity<CustomerBean> getCustomerById(@PathVariable("refId") String refId){
-    	CustomerBean customerBean = customerService.searchCustomerWithRefID(refId).get(0);
+    public ResponseEntity<CustomerResponse> getCustomerById(@PathVariable("refId") String refId){
+    	CustomerResponse customerBean = customerService.searchCustomerWithRefID(refId);
+    	if(customerBean != null) {
+    		return new ResponseEntity<CustomerResponse>(customerBean, new HttpHeaders(), HttpStatus.OK);
+    	}
  
-        return new ResponseEntity<CustomerBean>(customerBean, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<CustomerResponse>(customerBean, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
  
     
  
     @DeleteMapping("/deleteCustomer/{referanceId}")
-    public HttpStatus deleteEmployeeById(@PathVariable("referanceId") String id){
+    public ResponseEntity<String> deleteEmployeeById(@PathVariable("referanceId") String id){
     	int result = customerService.deleteCustomerData(id);
     	if(result>0) {
-    		 return HttpStatus.OK;
+    		return new ResponseEntity<String>("Deleted Successfully", new HttpHeaders(), HttpStatus.OK);
     	}
-        return HttpStatus.FORBIDDEN;
+    	return new ResponseEntity<String>("Id not exist", new HttpHeaders(), HttpStatus.FORBIDDEN);
     }
     
-    @PostMapping("/updateCustomer")
+    @PutMapping("/updateCustomer")
     public ResponseEntity<CustomerBean> UpdateCustomer(@RequestBody CustomerBean customerBean){
     	int updated = customerService.updateCustomerData(customerBean);
     	if(updated>0) {

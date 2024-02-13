@@ -3,7 +3,9 @@
  */
 package com.insurance.main.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import com.insurance.main.bean.CustomerBean;
 import com.insurance.main.dao.DataDao;
 import com.insurance.main.logics.CustomerRefId;
+import com.insurance.main.repository.CustomerRepository;
+import com.insurance.main.response.CustomerResponse;
 
 /**
  * @author Narsingh Mahankali
@@ -19,39 +23,57 @@ import com.insurance.main.logics.CustomerRefId;
 
 @Service
 public class CustomerServiceImplementation implements CustomerService {
+	/*
+	 * @Autowired DataDao dao;
+	 */
+	
 	@Autowired
-	DataDao dao;
+	CustomerRepository customerRepo;
 
 	@Override
 	public int insertCustomerData(CustomerBean customerBean) {
 		if(customerBean != null && customerBean.getCustomerReferanceId() == null) {
 			customerBean.setCustomerReferanceId(CustomerRefId.getCustomerRefId());
 		}
-		return dao.insertCustomerData(customerBean);
+		customerRepo.save(customerBean);
+		//return dao.insertCustomerData(customerBean);
+		return 1;
 	}
 
 	@Override
 	public int updateCustomerData(CustomerBean customerBean) {
-		String id = "'"+customerBean.getCustomerReferanceId()+"'";
-		List<CustomerBean> customerList = dao.searchCustomerWithRefID(id);
-		if(customerList == null || customerList.isEmpty()) {
-			return 0;
-		}
-		for(CustomerBean tempCustomer : customerList) {
-			if(compareString(tempCustomer.getCustomerFirstName(),customerBean.getCustomerFirstName())) {
-				customerBean.setCustomerFirstName(null);
-			}
-			if(compareString(tempCustomer.getCustomerLastName(),customerBean.getCustomerLastName())) {
-				customerBean.setCustomerLastName(null);
-			}
-			if(compareString(tempCustomer.getCustomerAddress(),customerBean.getCustomerAddress())) {
-				customerBean.setCustomerAddress(null);
-			}
-			if(compareString(tempCustomer.getCustomerDOB(),customerBean.getCustomerDOB())) {
-				customerBean.setCustomerDOB(null);
-			}
-		}
-		return dao.updateCustomerData(customerBean);
+		//String id = "'"+customerBean.getCustomerReferanceId()+"'";
+		//List<CustomerBean> customerList = dao.searchCustomerWithRefID(id);
+		/*
+		 * Optional<CustomerBean> customerList =
+		 * customerRepo.findById(customerBean.getCustomerReferanceId());
+		 * 
+		 * if(!customerList.isPresent()) { return 0; } customerList.ifPresent(val -> {
+		 * if(compareString(val.getCustomerFirstName(),customerBean.getCustomerFirstName
+		 * ())) { customerBean.setCustomerFirstName(null); }
+		 * if(compareString(val.getCustomerLastName(),customerBean.getCustomerLastName()
+		 * )) { customerBean.setCustomerLastName(null); }
+		 * if(compareString(val.getCustomerAddress(),customerBean.getCustomerAddress()))
+		 * { customerBean.setCustomerAddress(null); }
+		 * if(compareString(val.getCustomerDOB(),customerBean.getCustomerDOB())) {
+		 * customerBean.setCustomerDOB(null); }
+		 * 
+		 * 
+		 * });
+		 */
+		/*
+		 * for(CustomerBean tempCustomer : customerList) {
+		 * if(compareString(tempCustomer.getCustomerFirstName(),customerBean.
+		 * getCustomerFirstName())) { customerBean.setCustomerFirstName(null); }
+		 * if(compareString(tempCustomer.getCustomerLastName(),customerBean.
+		 * getCustomerLastName())) { customerBean.setCustomerLastName(null); }
+		 * if(compareString(tempCustomer.getCustomerAddress(),customerBean.
+		 * getCustomerAddress())) { customerBean.setCustomerAddress(null); }
+		 * if(compareString(tempCustomer.getCustomerDOB(),customerBean.getCustomerDOB())
+		 * ) { customerBean.setCustomerDOB(null); } }
+		 */
+		customerRepo.save(customerBean);
+		return 1;//dao.updateCustomerData(customerBean);
 	}
 	
 	private boolean compareString(String tempValue,String exactValue) {
@@ -62,18 +84,37 @@ public class CustomerServiceImplementation implements CustomerService {
 	}
 
 	@Override
-	public List<CustomerBean> searchCustomerWithRefID(String customerReferanceId) {
-		return dao.searchCustomerWithRefID(customerReferanceId);
+	public CustomerResponse searchCustomerWithRefID(String customerReferanceId) {
+		List<CustomerResponse> response = new ArrayList<>();
+		Optional<CustomerBean> customerList = customerRepo.findById(customerReferanceId);
+		customerList.ifPresent(val -> {
+			CustomerResponse res = new CustomerResponse();
+			res.setCustomerReferanceId(val.getCustomerReferanceId());
+			res.setCustomerFirstName(val.getCustomerFirstName());
+			res.setCustomerLastName(val.getCustomerLastName());
+			res.setCustomerDOB(val.getCustomerDOB());
+			res.setCustomerAddress(val.getCustomerAddress());
+			response.add(res);
+		});
+		
+		return response != null && !response.isEmpty() ? response.get(0) : null;
 	}
 
 	@Override
 	public int deleteCustomerData(String customerReferanceId) {
-		return dao.deleteCustomerData(customerReferanceId);
+		//return dao.deleteCustomerData(customerReferanceId);
+		try {
+			customerRepo.deleteById(customerReferanceId);
+			return 1;
+		}catch(Exception e) {
+			return 0;
+		}
 	}
 
 	@Override
 	public List<CustomerBean> getAllCustomers() {
-		return dao.getAllCustomers();
+		return customerRepo.findAll();
+		//return dao.getAllCustomers();
 	}
 
 }

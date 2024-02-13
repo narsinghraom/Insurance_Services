@@ -6,6 +6,7 @@ package com.insurance.main.service;
 import java.util.List;
 
 import com.insurance.main.bean.CustomerBean;
+import com.insurance.main.response.CustomerResponse;
 
 /**
  * @author Narsingh Mahankali
@@ -16,7 +17,7 @@ public interface CustomerService {
 
 	public int updateCustomerData(CustomerBean customerBean);
 
-	public List<CustomerBean> searchCustomerWithRefID(String customerReferanceId);
+	public CustomerResponse searchCustomerWithRefID(String customerReferanceId);
 
 	public int deleteCustomerData(String customerReferanceId);
 	
