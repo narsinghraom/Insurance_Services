@@ -115,6 +115,7 @@ public class CustomerServiceImplementation implements CustomerService {
 	public List<CustomerBean> getAllCustomers() {
 		return customerRepo.findAll();
 		//return dao.getAllCustomers();
+		
 	}
 
 }
