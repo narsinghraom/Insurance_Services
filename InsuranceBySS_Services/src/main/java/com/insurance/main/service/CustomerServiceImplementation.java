@@ -87,6 +87,7 @@ public class CustomerServiceImplementation implements CustomerService {
 	public CustomerResponse searchCustomerWithRefID(String customerReferanceId) {
 		List<CustomerResponse> response = new ArrayList<>();
 		Optional<CustomerBean> customerList = customerRepo.findById(customerReferanceId);
+		customerRepo.findByCustomerFirstName();
 		customerList.ifPresent(val -> {
 			CustomerResponse res = new CustomerResponse();
 			res.setCustomerReferanceId(val.getCustomerReferanceId());
@@ -95,6 +96,14 @@ public class CustomerServiceImplementation implements CustomerService {
 			res.setCustomerDOB(val.getCustomerDOB());
 			res.setCustomerAddress(val.getCustomerAddress());
 			response.add(res);
+		});
+		
+		for(CustomerResponse obj : response) {
+			//logic
+		}
+		
+		response.forEach(obj ->{
+			//logic
 		});
 		
 		return response != null && !response.isEmpty() ? response.get(0) : null;
